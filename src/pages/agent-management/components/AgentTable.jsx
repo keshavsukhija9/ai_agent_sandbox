@@ -11,7 +11,8 @@ const AgentTable = ({
   onSort, 
   sortConfig, 
   onAgentClick,
-  onAgentAction 
+  onAgentAction,
+  loading
 }) => {
   const [hoveredRow, setHoveredRow] = useState(null);
 

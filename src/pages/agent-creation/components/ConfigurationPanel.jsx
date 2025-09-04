@@ -17,20 +17,52 @@ const ConfigurationPanel = ({
   setShowAdvanced
 }) => {
   const modelOptions = [
+    // Free Hugging Face Models
+    { 
+      value: 'microsoft/DialoGPT-medium', 
+      label: 'DialoGPT Medium (Free)', 
+      description: 'Conversational AI - Free on Hugging Face' 
+    },
+    { 
+      value: 'facebook/blenderbot-400M-distill', 
+      label: 'BlenderBot 400M (Free)', 
+      description: 'Open-domain chatbot - Free' 
+    },
+    { 
+      value: 'microsoft/CodeBERT-base', 
+      label: 'CodeBERT (Free)', 
+      description: 'Code understanding and generation - Free' 
+    },
+    { 
+      value: 'distilbert-base-uncased', 
+      label: 'DistilBERT (Free)', 
+      description: 'Fast text classification - Free' 
+    },
+    { 
+      value: 'facebook/bart-large-mnli', 
+      label: 'BART MNLI (Free)', 
+      description: 'Text classification and NLI - Free' 
+    },
+    { 
+      value: 'sentence-transformers/all-MiniLM-L6-v2', 
+      label: 'MiniLM Embeddings (Free)', 
+      description: 'Text embeddings and similarity - Free' 
+    },
+    // Premium Models
     { 
       value: 'gpt-4o-mini', 
-      label: 'GPT-4o Mini', 
-      description: 'Fast and efficient for most tasks' 
+      label: 'GPT-4o Mini (Premium)', 
+      description: 'Fast and efficient - Requires API key' 
     },
     { 
       value: 'gpt-3.5-turbo', 
-      label: 'GPT-3.5 Turbo', 
-      description: 'Cost-effective for simple tasks' 
+      label: 'GPT-3.5 Turbo (Premium)', 
+      description: 'Cost-effective - Requires API key' 
     },
     { 
       value: 'gpt-4', 
-      label: 'GPT-4', 
-      description: 'Most capable for complex reasoning' 
+      label: 'GPT-4 (Premium)', 
+      description: 'Most capable - Requires API key' 
     }
   ];
 
@@ -71,14 +103,33 @@ const ConfigurationPanel = ({
   ];
 
   const availableSkills = [
+    // Data Collection
     { id: 'web-scraping', name: 'Web Scraping', category: 'Data Collection', rating: 4.8 },
     { id: 'api-integration', name: 'API Integration', category: 'Data Collection', rating: 4.9 },
-    { id: 'data-analysis', name: 'Data Analysis', category: 'Processing', rating: 4.7 },
+    { id: 'sentiment-analysis', name: 'Sentiment Analysis', category: 'Data Collection', rating: 4.6 },
+    { id: 'text-extraction', name: 'Text Extraction', category: 'Data Collection', rating: 4.5 },
+    
+    // AI Processing
+    { id: 'text-classification', name: 'Text Classification', category: 'AI Processing', rating: 4.7 },
+    { id: 'language-detection', name: 'Language Detection', category: 'AI Processing', rating: 4.6 },
+    { id: 'text-summarization', name: 'Text Summarization', category: 'AI Processing', rating: 4.8 },
+    { id: 'question-answering', name: 'Question Answering', category: 'AI Processing', rating: 4.7 },
+    { id: 'code-generation', name: 'Code Generation', category: 'AI Processing', rating: 4.5 },
+    
+    // Data Processing
+    { id: 'data-analysis', name: 'Data Analysis', category: 'Data Processing', rating: 4.7 },
+    { id: 'file-processing', name: 'File Processing', category: 'Data Processing', rating: 4.5 },
+    { id: 'data-transformation', name: 'Data Transformation', category: 'Data Processing', rating: 4.6 },
+    
+    // Communication
     { id: 'email-automation', name: 'Email Automation', category: 'Communication', rating: 4.6 },
-    { id: 'file-processing', name: 'File Processing', category: 'Processing', rating: 4.5 },
     { id: 'notification-system', name: 'Notifications', category: 'Communication', rating: 4.8 },
+    { id: 'report-generation', name: 'Report Generation', category: 'Communication', rating: 4.7 },
+    
+    // Storage & Media
     { id: 'database-operations', name: 'Database Operations', category: 'Data Storage', rating: 4.7 },
-    { id: 'image-processing', name: 'Image Processing', category: 'Media', rating: 4.4 }
+    { id: 'image-processing', name: 'Image Processing', category: 'Media', rating: 4.4 },
+    { id: 'audio-processing', name: 'Audio Processing', category: 'Media', rating: 4.3 }
   ];
 
   const skillCategories = [...new Set(availableSkills.map(skill => skill.category))];
@@ -231,7 +282,9 @@ const ConfigurationPanel = ({
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <span className="text-muted-foreground">Compute Cost:</span>
-            <span className="ml-2 font-medium text-foreground">$0.05/hour</span>
+            <span className="ml-2 font-medium text-foreground">
+              {selectedModel?.includes('gpt') ? '$0.05/hour' : 'Free'}
+            </span>
           </div>
           <div>
             <span className="text-muted-foreground">Memory Usage:</span>

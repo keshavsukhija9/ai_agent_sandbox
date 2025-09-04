@@ -8,7 +8,11 @@ import ActivityFeed from './components/ActivityFeed';
 import ActiveTasksPanel from './components/ActiveTasksPanel';
 import QuickActionsPanel from './components/QuickActionsPanel';
 import SystemStatusBar from './components/SystemStatusBar';
+import UserProfile from '../../components/ui/UserProfile';
+import TestPanel from '../../components/TestPanel';
+import TestRunner from '../../components/TestRunner';
 import Button from '../../components/ui/Button';
+import { supabaseService } from '../../services/supabaseService';
 
 
 const Dashboard = () => {
@@ -16,17 +20,35 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Simulate loading state
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
   const handleSidebarToggle = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
+
+  // Load dashboard data
+  useEffect(() => {
+    const loadDashboardData = async () => {
+      try {
+        // Check for mock user first
+        const mockUser = localStorage.getItem('mockUser');
+        if (mockUser) {
+          const user = JSON.parse(mockUser);
+          console.log('Using mock user:', user.name, 'via', user.provider);
+        }
+        
+        const user = await supabaseService.getCurrentUser();
+        const { data: agents } = await supabaseService.getAgents(user?.id);
+        console.log('Loaded agents:', agents);
+      } catch (error) {
+        console.log('Using demo mode');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadDashboardData();
+  }, []);
+
+  
 
   const metricsData = [
     {
@@ -124,8 +146,17 @@ const Dashboard = () => {
             </div>
           </div>
 
+          {/* User Profile */}
+          <UserProfile />
+
           {/* System Status Bar */}
           <SystemStatusBar />
+          
+          {/* Test Panel */}
+          <TestPanel />
+          
+          {/* Test Runner */}
+          <TestRunner />
 
           {/* Metrics Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -160,17 +191,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Mobile Stack Layout */}
-          <div className="lg:hidden mt-6 space-y-6">
-            {/* Mobile swipe indicator */}
-            <div className="flex justify-center">
-              <div className="flex space-x-2">
-                <div className="w-2 h-2 bg-primary rounded-full"></div>
-                <div className="w-2 h-2 bg-muted rounded-full"></div>
-                <div className="w-2 h-2 bg-muted rounded-full"></div>
-              </div>
-            </div>
-          </div>
+          
 
           {/* Footer Actions */}
           <div className="mt-12 pt-8 border-t border-border">

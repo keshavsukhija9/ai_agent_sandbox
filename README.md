@@ -1,107 +1,126 @@
-# React
+# AI Agent Sandbox
 
-A modern React-based project utilizing the latest frontend technologies and tools for building responsive web applications.
+A modern React-based platform for creating and managing autonomous AI agents, powered by Hugging Face AI models and Supabase backend.
 
 ## 🚀 Features
 
-- **React 18** - React version with improved rendering and concurrent features
-- **Vite** - Lightning-fast build tool and development server
-- **Redux Toolkit** - State management with simplified Redux setup
-- **TailwindCSS** - Utility-first CSS framework with extensive customization
-- **React Router v6** - Declarative routing for React applications
-- **Data Visualization** - Integrated D3.js and Recharts for powerful data visualization
-- **Form Management** - React Hook Form for efficient form handling
-- **Animation** - Framer Motion for smooth UI animations
-- **Testing** - Jest and React Testing Library setup
+- **AI-Powered Agent Creation** - Natural language task breakdown using Hugging Face models
+- **Real-time Database** - Supabase integration with PostgreSQL and real-time subscriptions
+- **Authentication** - Secure user management with Supabase Auth
+- **Agent Management** - Complete CRUD operations for AI agents
+- **Task Visualization** - Interactive task tree and execution monitoring
+- **Responsive Design** - Mobile-first design with TailwindCSS
+- **Modern Stack** - React 18, Vite, Redux Toolkit, React Router v6
 
 ## 📋 Prerequisites
 
 - Node.js (v14.x or higher)
 - npm or yarn
+- Supabase account
+- Hugging Face account
 
 ## 🛠️ Installation
 
 1. Install dependencies:
    ```bash
    npm install
-   # or
-   yarn install
+   ```
+
+2. Configure environment variables:
+   ```bash
+   cp .env.example .env
+   # Update .env with your Supabase and Hugging Face credentials
+   ```
+
+3. Set up Supabase database:
+   ```bash
+   # Run the SQL schema from database-schema.sql in your Supabase project
    ```
    
-2. Start the development server:
+4. Start the development server:
    ```bash
    npm start
-   # or
-   yarn start
    ```
 
 ## 📁 Project Structure
 
 ```
-react_app/
+ai_agent_sandbox/
 ├── public/             # Static assets
 ├── src/
 │   ├── components/     # Reusable UI components
+│   │   └── ui/         # Base UI components
 │   ├── pages/          # Page components
-│   ├── styles/         # Global styles and Tailwind configuration
-│   ├── App.jsx         # Main application component
-│   ├── Routes.jsx      # Application routes
-│   └── index.jsx       # Application entry point
-├── .env                # Environment variables
-├── index.html          # HTML template
-├── package.json        # Project dependencies and scripts
-├── tailwind.config.js  # Tailwind CSS configuration
-└── vite.config.js      # Vite configuration
+│   │   ├── agent-creation/
+│   │   ├── agent-management/
+│   │   ├── dashboard/
+│   │   ├── login/
+│   │   └── register/
+│   ├── services/       # API services
+│   │   ├── huggingface.js
+│   │   └── supabaseService.js
+│   ├── hooks/          # Custom React hooks
+│   ├── utils/          # Utility functions
+│   └── styles/         # Global styles
+├── database-schema.sql # Supabase database schema
+├── SETUP.md           # Detailed setup instructions
+└── .env               # Environment variables
 ```
 
-## 🧩 Adding Routes
+## 🤖 AI Integration
 
-To add new routes to the application, update the `Routes.jsx` file:
+### Hugging Face Models
+- **Task Breakdown**: `microsoft/DialoGPT-medium` for natural language task analysis
+- **Classification**: `facebook/bart-large-mnli` for agent type categorization
+- **Complexity Analysis**: Sentiment analysis for task difficulty assessment
 
-```jsx
-import { useRoutes } from "react-router-dom";
-import HomePage from "pages/HomePage";
-import AboutPage from "pages/AboutPage";
+### Supabase Features
+- **Authentication**: User registration, login, and session management
+- **Database**: PostgreSQL with real-time subscriptions
+- **Security**: Row Level Security (RLS) for data protection
+- **Storage**: File uploads and management
 
-const ProjectRoutes = () => {
-  let element = useRoutes([
-    { path: "/", element: <HomePage /> },
-    { path: "/about", element: <AboutPage /> },
-    // Add more routes as needed
-  ]);
+## 🔐 Authentication
 
-  return element;
-};
-```
+The application includes:
+- Protected routes with authentication guards
+- Supabase Auth integration
+- Demo credentials: `admin@aiagent.com` / `admin123`
+- User session management
 
-## 🎨 Styling
+## 📊 Dashboard Features
 
-This project uses Tailwind CSS for styling. The configuration includes:
-
-- Forms plugin for form styling
-- Typography plugin for text styling
-- Aspect ratio plugin for responsive elements
-- Container queries for component-specific responsive design
-- Fluid typography for responsive text
-- Animation utilities
-
-## 📱 Responsive Design
-
-The app is built with responsive design using Tailwind CSS breakpoints.
+- **Agent Metrics**: Active agents, completed tasks, success rates
+- **Activity Feed**: Real-time system activity monitoring
+- **Task Management**: Create, monitor, and manage agent tasks
+- **System Status**: Performance monitoring and health checks
 
 
 ## 📦 Deployment
 
-Build the application for production:
+1. Build the application:
+   ```bash
+   npm run build
+   ```
 
-```bash
-npm run build
-```
+2. Deploy to your preferred platform (Vercel, Netlify, etc.)
+
+3. Configure environment variables in production
+
+## 🔧 Configuration
+
+See `SETUP.md` for detailed configuration instructions including:
+- Supabase project setup
+- Hugging Face API configuration
+- Database schema installation
+- Environment variable configuration
 
 ## 🙏 Acknowledgments
 
-- Built with [Rocket.new](https://rocket.new)
-- Powered by React and Vite
-- Styled with Tailwind CSS
+- **AI Models**: Powered by Hugging Face transformers
+- **Backend**: Supabase for authentication and database
+- **Frontend**: React 18 with Vite build system
+- **Styling**: TailwindCSS with custom design system
+- **Icons**: Lucide React icon library
 
-Built with ❤️ on Rocket.new
+Built with ❤️ for AI agent management

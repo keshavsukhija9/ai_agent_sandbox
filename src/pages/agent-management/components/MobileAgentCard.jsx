@@ -8,7 +8,8 @@ const MobileAgentCard = ({
   isSelected, 
   onSelect, 
   onAgentClick, 
-  onAction 
+  onAction,
+  loading
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 

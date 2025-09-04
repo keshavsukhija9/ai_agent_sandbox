@@ -2,6 +2,8 @@ import React from "react";
 import { BrowserRouter, Routes as RouterRoutes, Route } from "react-router-dom";
 import ScrollToTop from "components/ScrollToTop";
 import ErrorBoundary from "components/ErrorBoundary";
+import ProtectedRoute from "components/ProtectedRoute";
+import AuthCallback from "components/AuthCallback";
 import NotFound from "pages/NotFound";
 import AgentCreation from './pages/agent-creation';
 import Login from './pages/login';
@@ -16,14 +18,14 @@ const Routes = () => {
       <ErrorBoundary>
       <ScrollToTop />
       <RouterRoutes>
-        {/* Define your route here */}
-        <Route path="/" element={<AgentCreation />} />
-        <Route path="/agent-creation" element={<AgentCreation />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/agent-management" element={<AgentManagement />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/task-tree-visualization" element={<TaskTreeVisualization />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/agent-creation" element={<ProtectedRoute><AgentCreation /></ProtectedRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/agent-management" element={<ProtectedRoute><AgentManagement /></ProtectedRoute>} />
+        <Route path="/task-tree-visualization" element={<ProtectedRoute><TaskTreeVisualization /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
       </RouterRoutes>
       </ErrorBoundary>

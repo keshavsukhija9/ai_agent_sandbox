@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 import Icon from '../AppIcon';
 import Button from './Button';
 
@@ -8,6 +9,7 @@ const Header = ({ onSidebarToggle, isSidebarCollapsed = false }) => {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
 
   const handleUserMenuToggle = () => {
     setIsUserMenuOpen(!isUserMenuOpen);
@@ -19,9 +21,39 @@ const Header = ({ onSidebarToggle, isSidebarCollapsed = false }) => {
     setIsUserMenuOpen(false);
   };
 
-  const handleLogout = () => {
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      // Clear any local storage
+      localStorage.removeItem('mockUser');
+      localStorage.removeItem('demo_agents');
+      // Force redirect
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Force logout anyway
+      localStorage.clear();
+      window.location.href = '/login';
+    }
     setIsUserMenuOpen(false);
+  };
+
+  const getUserName = () => {
+    if (!user) return 'User';
+    return user.user_metadata?.full_name || 
+           user.user_metadata?.name || 
+           user.email?.split('@')[0] || 
+           'User';
+  };
+
+  const getUserEmail = () => {
+    return user?.email || 'user@example.com';
+  };
+
+  const getUserAvatar = () => {
+    if (!user) return null;
+    return user.user_metadata?.avatar_url || 
+           user.user_metadata?.picture;
   };
 
   const handleProfileClick = () => {
@@ -176,7 +208,18 @@ const Header = ({ onSidebarToggle, isSidebarCollapsed = false }) => {
               onClick={handleUserMenuToggle}
               className="relative"
             >
-              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+              {getUserAvatar() ? (
+                <img 
+                  src={getUserAvatar()} 
+                  alt={getUserName()}
+                  className="w-8 h-8 rounded-full object-cover"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
+                />
+              ) : null}
+              <div className={`w-8 h-8 bg-primary rounded-full flex items-center justify-center ${getUserAvatar() ? 'hidden' : ''}`}>
                 <Icon name="User" size={16} className="text-primary-foreground" />
               </div>
             </Button>
@@ -184,8 +227,25 @@ const Header = ({ onSidebarToggle, isSidebarCollapsed = false }) => {
             {isUserMenuOpen && (
               <div className="absolute right-0 mt-2 w-56 bg-popover border border-border rounded-md elevation-strong z-1200">
                 <div className="p-4 border-b border-border">
-                  <p className="font-medium text-popover-foreground">John Doe</p>
-                  <p className="text-sm text-muted-foreground">john.doe@company.com</p>
+                  <div className="flex items-center space-x-3">
+                    {getUserAvatar() && (
+                      <img 
+                        src={getUserAvatar()} 
+                        alt={getUserName()}
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
+                    )}
+                    <div>
+                      <p className="font-medium text-popover-foreground">{getUserName()}</p>
+                      <p className="text-sm text-muted-foreground">{getUserEmail()}</p>
+                      {user?.app_metadata?.provider && (
+                        <p className="text-xs text-muted-foreground flex items-center mt-1">
+                          <Icon name={user.app_metadata.provider === 'google' ? 'Chrome' : 'Github'} size={10} className="mr-1" />
+                          {user.app_metadata.provider}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </div>
                 <div className="py-2">
                   <button

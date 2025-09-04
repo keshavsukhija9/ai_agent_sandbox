@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
+import { supabase } from '../../../utils/supabase';
+import { mockOAuthService } from '../../../services/mockOAuth';
 
 const OAuthButtons = () => {
   const navigate = useNavigate();
@@ -10,12 +12,28 @@ const OAuthButtons = () => {
   const handleOAuthLogin = async (provider) => {
     setLoadingProvider(provider);
     
-    // Simulate OAuth authentication
-    setTimeout(() => {
-      // Mock successful OAuth login
-      navigate('/dashboard');
+    try {
+      console.log(`Starting ${provider} OAuth...`);
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: provider,
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`
+        }
+      });
+      
+      if (error) {
+        console.error('OAuth error:', error);
+        console.error('Error details:', JSON.stringify(error, null, 2));
+        alert(`${provider} OAuth error: ${error.message}\n\nCheck console for details.`);
+      } else {
+        console.log('OAuth initiated successfully');
+      }
+    } catch (error) {
+      console.error('OAuth failed:', error);
+      alert(`OAuth failed: ${error.message}`);
+    } finally {
       setLoadingProvider(null);
-    }, 2000);
+    }
   };
 
   const oauthProviders = [

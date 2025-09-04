@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
 import Icon from '../../../components/AppIcon';
+import { supabaseService } from '../../../services/supabaseService';
+import { supabase } from '../../../utils/supabase';
+import { mockOAuthService } from '../../../services/mockOAuth';
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -61,25 +64,31 @@ const LoginForm = () => {
     
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      if (formData?.email === mockCredentials?.email && formData?.password === mockCredentials?.password) {
-        // Success - redirect to dashboard
-        navigate('/dashboard');
+    try {
+      const { data, error } = await supabaseService.signIn(formData.email, formData.password);
+      
+      if (error) {
+        // Fallback to mock credentials for demo
+        if (formData?.email === mockCredentials?.email && formData?.password === mockCredentials?.password) {
+          navigate('/dashboard');
+        } else {
+          setErrors({ general: 'Invalid email or password. Please try again.' });
+        }
       } else {
-        // Invalid credentials
-        setErrors({
-          general: 'Invalid email or password. Please try again.'
-        });
+        navigate('/dashboard');
       }
+    } catch (error) {
+      setErrors({ general: 'Authentication failed. Please try again.' });
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const handleForgotPassword = () => {
-    // Mock forgot password functionality
     alert('Password reset link would be sent to your email address.');
   };
+
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -131,15 +140,30 @@ const LoginForm = () => {
           {isLoading ? 'Signing In...' : 'Sign In'}
         </Button>
 
-        <div className="text-center">
+
+
+        <div className="text-center space-y-2">
           <button
             type="button"
             onClick={handleForgotPassword}
-            className="text-sm text-primary hover:text-primary/80 transition-colors"
+            className="text-sm text-primary hover:text-primary/80 transition-colors block w-full"
             disabled={isLoading}
           >
             Forgot your password?
           </button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              console.log('Navigating to dashboard...');
+              navigate('/dashboard');
+            }}
+            disabled={isLoading}
+            className="text-xs w-full"
+          >
+            Skip Login (Demo Mode)
+          </Button>
         </div>
       </div>
     </form>
